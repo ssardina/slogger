@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "slogger"
+description = "Sebastian's Logger for Python"
+authors = [
+    { name="Sebastian Sardina", email="ssardina@gmail.com" },
+]
+readme = { file = "README.md", content-type = "text/markdown" }
+license = { text = "MIT" }
+requires-python = ">=3.10"
+dependencies = [
+    "loguru",
+]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: POSIX :: Linux"
+]
+
+# version = "0.1.2"  # <-- old static version
+
+# we generate version dynamically from tag vx.y.z in repo
+# using setuptools_scm
+dynamic = ["version"]
+
+[tool.setuptools_scm]
+tag_regex = "^v(?P<version>.*)$"  # version tag regex v1.0.0 (with a v in front
+
+[project.urls]
+Homepage = "https://github.com/ssardina/slogger"
+
+[tool.setuptools.packages.find]
+include = ["slogger*"]
+
