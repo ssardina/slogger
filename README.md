@@ -10,7 +10,7 @@ Features:
 ## Installation
 
 ```console
-$ pip install git+https://github.com/yourname/slogger.git
+$ pip install git+https://github.com/ssardina/slogger.git
 ```
 
 ## Example
