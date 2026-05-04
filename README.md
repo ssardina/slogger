@@ -1,9 +1,9 @@
 # slogger: My own Logging System for Python
 
-Features:
+A personal logger based on [loguru](https://github.com/delgan/loguru), with some custom features that I find useful in my projects:
 
-- Identation per depth level for better readability.
-- Coloring of log messages based on log level.
+- Indentation per depth level for better readability.
+- Colouring of log messages based on log level.
 - Rotating file.
 - Custom timezone (useful when running on servers with UTC time).
 
