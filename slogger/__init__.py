@@ -1,8 +1,7 @@
-from .loguru_backend import (
-    setup_logging,
-    log_indent,
-    log_depth,   # (rename this, see below)
-    set_depth,   # (new function to set depth directly, useful for async contexts
-)
+from loguru import logger as _logger
+from .loguru_backend import setup_logging, log_indent, log_depth
 
-__all__ = ["setup_logging", "log_indent", "log_depth"]
+logger = _logger
+
+__all__ = ["logger", "setup_logging", "log_indent", "log_depth"]
+

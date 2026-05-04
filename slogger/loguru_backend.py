@@ -15,7 +15,6 @@ _log_depth = ContextVar("log_depth", default=0)
 DEFAULT_INDENT = 2
 DEFAULT_TIMEZONE = ZoneInfo("Australia/Melbourne")
 
-
 SHORT_LEVELS = {
     "WARNING": "WARN",
     "ERROR": "ERR",
@@ -23,21 +22,29 @@ SHORT_LEVELS = {
     "DEBUG": "DEBG",
 }
 
+_sink_ids = []
+
 
 def setup_logging(
     level="INFO",
     indent=DEFAULT_INDENT,
     timezone=DEFAULT_TIMEZONE,
-    fmt=None,
     colorize=True,
     file=None,
     short_levels=False,
     force=False
 ):
+    global _sink_ids
+
+    # remove only our sinks
+    for sid in _sink_ids:
+        logger.remove(sid)
+    _sink_ids.clear()
 
     if force:
         # remove handlers added by other libraries
         logger.remove()
+        
 
     def formatter(record):
         depth = record["extra"].get("depth", _log_depth.get())
@@ -56,22 +63,23 @@ def setup_logging(
         if colorize:
             return (
                 f"<green>{time_str}</green> "
-                f"[<cyan>{name}</cyan>] "
                 f"<level>{level:<7}</level> | "
+                f"[<cyan>{name}</cyan>] - "
                 f"{indent_str}<level>{msg}</level>\n"
             )
         else:
             return f"{time_str} [{name}] {level:<7} | {indent_str}{msg}\n"
 
-    logger.add(
+    sid = logger.add(
         sys.stdout,
         level=level,
         format=formatter,
         colorize=colorize,
     )
+    _sink_ids.append(sid)
 
     if file:
-        logger.add(
+        sid = logger.add(
             file,
             level=level,
             format=formatter,
@@ -79,6 +87,7 @@ def setup_logging(
             rotation="3 MB",
             retention=3,
         )
+        _sink_ids.append(sid)
 
     return logger
 
