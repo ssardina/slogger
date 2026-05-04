@@ -96,11 +96,12 @@ def setup_logging(
 
 log_with_depth("INFO", "Hello", depth=2)
 """
-
-
 def log_depth(level, message, depth=0, **kwargs):
     logger.bind(depth=depth).log(level, message, **kwargs)
 
+
+def set_depth(depth: int):
+    return _log_depth.set(depth)
 
 
 """Context manager to increase log depth for a block of code.
@@ -119,8 +120,3 @@ def log_indent():
         yield
     finally:
         _log_depth.reset(token)
-
-
-
-def set_depth(depth: int):
-    return _log_depth.set(depth)

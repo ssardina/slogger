@@ -5,7 +5,7 @@ Run in-place (no install needed) from the repo root:
 
 import os
 
-from . import setup_logging, log_indent, log_depth, set_depth
+from . import setup_logging, log_indent, log_depth, set_depth, VERSION
 
 
 def test_basic_logging():
@@ -81,6 +81,7 @@ def test_file_logging(tmp_path=None):
 
 
 if __name__ == "__main__":
+    print(f"Running slogger tests (version: {VERSION})")
     test_basic_logging()
     test_short_levels()
     test_log_indent()
