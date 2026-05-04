@@ -15,10 +15,19 @@ $ pip install git+https://github.com/ssardina/slogger.git
 
 ## Example
 
-```python
-from slogger import setup_logging, log_indent, logger
+From the entry point of your application:
 
-setup_logging()
+```python
+from slogger import logger, setup_logging
+setup_logging(colorize=True, short_levels=False, indent=2, force=False)
+logger.remove(0)  # Remove default logger to prevent duplicate logs.
+```
+
+Then elsewhere in your code:
+
+```python
+from slogger import logger, log_indent
+
 
 logger.info("Start")
 
