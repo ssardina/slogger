@@ -2,10 +2,10 @@
 Run in-place (no install needed) from the repo root:
     python -m slogger.test
 """
-
 import os
 
-from . import setup_logging, log_indent, log_depth, set_depth, VERSION
+from . import VERSION
+from slogger.loguru_backend import setup_logging, log_indent, log_depth, set_depth
 
 
 def test_basic_logging():

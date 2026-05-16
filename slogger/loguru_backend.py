@@ -1,31 +1,23 @@
 import sys
 from datetime import datetime
-from zoneinfo import ZoneInfo
 
 from loguru import logger
 
 from contextvars import ContextVar
 from contextlib import contextmanager
 
+from .config import DEFAULT_INDENT, DEFAULT_TIMEZONE, SHORT_LEVELS
+
 # Context variable for depth (thread-safe, async-safe)
 _log_depth = ContextVar("log_depth", default=0)
 
-DEFAULT_INDENT = 2
-DEFAULT_TIMEZONE = ZoneInfo("Australia/Melbourne")
-
-SHORT_LEVELS = {
-    "WARNING": "WARN",
-    "ERROR": "ERR",
-    "CRITICAL": "CRIT",
-    "DEBUG": "DEBG",
-}
 
 _sink_ids = []
 _current_formatter = None
 
 
 def make_formatter(
-    indent=DEFAULT_INDENT, timezone=DEFAULT_TIMEZONE, colorize=True, short_levels=False
+    indent=DEFAULT_INDENT, timezone=DEFAULT_TIMEZONE, colorize=True, short_levels=False, level_width=7
 ):
     """Return a loguru format function configured with the given options."""
 
@@ -46,12 +38,12 @@ def make_formatter(
         if colorize:
             return (
                 f"<green>{time_str}</green> "
-                f"<level>{level:<7}</level> | "
+                f"<level>{level:<{level_width}}</level> | "
                 f"[<cyan>{name}</cyan>] - "
                 f"{indent_str}<level>{msg}</level>\n"
             )
         else:
-            return f"{time_str} [{name}] {level:<7} | {indent_str}{msg}\n"
+            return f"{time_str} [{name}] {level:<{level_width}} | {indent_str}{msg}\n"
 
     return formatter
 
@@ -77,7 +69,7 @@ def setup_logging(
         logger.remove()
 
     formatter = make_formatter(
-        indent=indent, timezone=timezone, colorize=colorize, short_levels=short_levels
+        indent=indent, timezone=timezone, colorize=colorize, short_levels=short_levels, level_width=4 if short_levels else 7
     )
     _current_formatter = formatter
 
@@ -104,7 +96,7 @@ def add_file_sink(file, level="INFO", formatter=None, rotation="3 MB", retention
         file,
         level=level,
         format=formatter,
-        colorize=False,
+        colorize=True,
         rotation=rotation,
         retention=retention,
     )

@@ -1,11 +1,17 @@
 # slogger: My own Logging System for Python
 
-A personal logger based on [loguru](https://github.com/delgan/loguru), with some custom features that I find useful in my projects:
+A personal logger system with a custom features that I find useful in applications:
 
 - Indentation per depth level for better readability.
 - Colouring of log messages based on log level.
 - Rotating file.
 - Custom timezone (useful when running on servers with UTC time).
+
+There are three implementations available:
+
+1. **loguru_backend**: Based on [loguru](https://github.com/delgan/loguru), with some custom features that I find useful in my projects.
+2. **logging_backend**: Based on Python's built-in `logging` module, with custom features for indentation and coloring. This is the original implementation I have used, but it is much more complex than the loguru one.
+3. **std_backend**: A simple backend done by Claude that I have never tested!
 
 ## Installation
 
@@ -18,27 +24,27 @@ $ pip install git+https://github.com/ssardina/slogger.git
 From the entry point of your application:
 
 ```python
-from slogger import logger, setup_logging
-setup_logging(colorize=True, short_levels=False, indent=2, force=False)
+# slogger: https://github.com/ssardina/slogger
+from slogger.loguru_backend import logger, setup_logging
+
+LEVEL = "INFO"
+# LEVEL = "DEBUG"
+setup_logging(level=LEVEL, colorize=True, short_levels=True, indent=2, flush=False)
 logger.remove(0)  # Remove default logger to prevent duplicate logs.
 ```
 
 Then elsewhere in your code:
 
 ```python
-from slogger import logger, log_indent
-
+from slogger.loguru_backend import logger, log_indent
 
 logger.info("Start")
 
 with log_indent():
-    logger.info("Nested")   
+    logger.info("Nested")
 ```
 
-
-## Development and testing:
-
-Logger is based on [loguru](https://github.com/delgan/loguru).
+## Development and testing
 
 ### Versioning
 
