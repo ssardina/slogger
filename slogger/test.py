@@ -10,7 +10,7 @@ from . import setup_logging, log_indent, log_depth, set_depth, VERSION
 
 def test_basic_logging():
     print("\n--- test_basic_logging ---")
-    log = setup_logging(level="DEBUG", colorize=False, force=True)
+    log = setup_logging(level="DEBUG", colorize=False, flush=True)
     log.debug("debug message")
     log.info("info message")
     log.warning("warning message")
@@ -19,7 +19,7 @@ def test_basic_logging():
 
 def test_short_levels():
     print("\n--- test_short_levels ---")
-    log = setup_logging(level="DEBUG", colorize=False, short_levels=True, force=True)
+    log = setup_logging(level="DEBUG", colorize=False, short_levels=True, flush=True)
     log.debug("short level debug")
     log.warning("short level warning")
     log.error("short level error")
@@ -28,7 +28,7 @@ def test_short_levels():
 
 def test_log_indent():
     print("\n--- test_log_indent ---")
-    log = setup_logging(level="DEBUG", colorize=False, force=True)
+    log = setup_logging(level="DEBUG", colorize=False, flush=True)
     log.info("depth 0")
     with log_indent():
         log.info("depth 1")
@@ -42,7 +42,7 @@ def test_log_indent():
 
 def test_log_depth():
     print("\n--- test_log_depth ---")
-    setup_logging(level="DEBUG", colorize=False, force=True)
+    setup_logging(level="DEBUG", colorize=False, flush=True)
     log_depth("INFO", "explicit depth 0", depth=0)
     log_depth("INFO", "explicit depth 2", depth=2)
     log_depth("DEBUG", "explicit depth 4", depth=4)
@@ -50,7 +50,7 @@ def test_log_depth():
 
 def test_set_depth():
     print("\n--- test_set_depth ---")
-    log = setup_logging(level="DEBUG", colorize=False, force=True)
+    log = setup_logging(level="DEBUG", colorize=False, flush=True)
     token = set_depth(3)
     log.info("set to depth 3")
     log.debug("still depth 3")
@@ -67,7 +67,7 @@ def test_file_logging(tmp_path=None):
     with tempfile.NamedTemporaryFile(suffix=".log", delete=False) as f:
         logfile = f.name
     try:
-        log = setup_logging(level="INFO", colorize=False, file=logfile, force=True)
+        log = setup_logging(level="INFO", colorize=False, file=logfile, flush=True)
         log.info("written to file")
         log.warning("warning to file")
         with open(logfile) as f:
