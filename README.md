@@ -19,7 +19,7 @@ There are three implementations available:
 $ pip install git+https://github.com/ssardina/slogger.git
 ```
 
-## Example
+## Examples
 
 From the entry point of your application:
 
@@ -42,7 +42,27 @@ logger.info("Start")
 
 with log_indent():
     logger.info("Nested")
+
+logger.info("This is a message with explicit depth level 4", depth=4)
 ```
+
+## Cavets and tips
+
+### Escaping braces in log messages
+
+If some kwargs are passed to the log call (even `depth=N`), loguru will try to format the message and will raise an error if there are unescaped braces `{`/ `}`. For example if you want to log a message like `Annotation: notice - {"totalPoints":65,"maxPoints":100}`
+
+The best solution is to use the parametrized logging pass the string containing braces as an extra parameter, and then loguru will format it correctly without raising an error. For example:
+
+```python
+logger.info("Annotation: notice - {data}", data={"totalPoints": 65, "maxPoints": 100}, depth=4)
+```
+
+Two other options are:
+
+1. Replace the braces with double braces to escape them: `msg.replace("{", "{{").replace("}", "}}")`; or
+2. Use `logger.bind(depth=4)`
+
 
 ## Development and testing
 

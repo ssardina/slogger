@@ -41,6 +41,7 @@ def make_formatter(
         name_label = record["name"] if name is None else name
 
         # escape the braces in the message to prevent loguru from trying to format them
+        # if some kwargs are passed to the log call (even depth=N), loguru will try to format the message and will raise an error if there are unescaped braces
         msg = record["message"].replace("{", "{{").replace("}", "}}")
 
         if colorize:
