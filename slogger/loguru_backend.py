@@ -1,5 +1,6 @@
 import sys
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 from loguru import logger
 
@@ -17,7 +18,12 @@ _current_formatter = None
 
 
 def make_formatter(
-    indent=DEFAULT_INDENT, timezone=DEFAULT_TIMEZONE, colorize=True, short_levels=False, level_width=7
+    name: str = None,
+    indent: int = DEFAULT_INDENT,
+    timezone: ZoneInfo = DEFAULT_TIMEZONE,
+    colorize: bool = True,
+    short_levels: bool = False,
+    level_width: int = 7,
 ):
     """Return a loguru format function configured with the given options."""
 
@@ -31,7 +37,9 @@ def make_formatter(
         level = record["level"].name
         if short_levels:
             level = SHORT_LEVELS.get(level, level)
-        name = record["name"]
+
+        name_label = record["name"] if name is None else name
+
         # escape the braces in the message to prevent loguru from trying to format them
         msg = record["message"].replace("{", "{{").replace("}", "}}")
 
@@ -39,23 +47,24 @@ def make_formatter(
             return (
                 f"<green>{time_str}</green> "
                 f"<level>{level:<{level_width}}</level> | "
-                f"[<cyan>{name}</cyan>] - "
+                f"[<cyan>{name_label}</cyan>] - "
                 f"{indent_str}<level>{msg}</level>\n"
             )
         else:
-            return f"{time_str} [{name}] {level:<{level_width}} | {indent_str}{msg}\n"
+            return f"{time_str} [{name_label}] {level:<{level_width}} | {indent_str}{msg}\n"
 
     return formatter
 
 
 def setup_logging(
-    level="INFO",
-    indent=DEFAULT_INDENT,
-    timezone=DEFAULT_TIMEZONE,
-    colorize=True,
-    file=None,
-    short_levels=False,
-    flush=False
+    level: str = "INFO",
+    name: str = None,
+    indent: int = DEFAULT_INDENT,
+    timezone: ZoneInfo = DEFAULT_TIMEZONE,
+    colorize: bool = True,
+    file: str = None,
+    short_levels: bool = False,
+    flush: bool = False,
 ):
     global _sink_ids, _current_formatter
 
@@ -69,7 +78,12 @@ def setup_logging(
         logger.remove()
 
     formatter = make_formatter(
-        indent=indent, timezone=timezone, colorize=colorize, short_levels=short_levels, level_width=4 if short_levels else 7
+        name=name,
+        indent=indent,
+        timezone=timezone,
+        colorize=colorize,
+        short_levels=short_levels,
+        level_width=4 if short_levels else 7,
     )
     _current_formatter = formatter
 
